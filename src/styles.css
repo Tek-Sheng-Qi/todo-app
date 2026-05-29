@@ -1,0 +1,512 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    color: #202020;
+    background: #ffffff;
+}
+
+ul {
+    list-style: none;
+}
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-sidebar: #fafafa;
+    --text-primary: #202020;
+    --text-secondary: #777777;
+    --border: #e0e0e0;
+    --accent: #db4035;
+    --priority-high: #db4035;
+    --priority-medium: #ff9a14;
+    --priority-low: #4073ff;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.container {
+    display: grid;
+    grid-template-areas: 
+    "sidebar header"
+    "sidebar content"
+    "footer footer";
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 60px 1fr auto;
+    min-height: 100vh;
+}
+
+.container.sidebar-collapsed {
+    grid-template-areas: 
+        "header"
+        "content"
+        "footer";
+    grid-template-columns: 1fr;  /* sidebar gone */
+}
+
+.container.sidebar-collapsed .sidebar {
+    display: none;
+}
+
+.sidebar { 
+    grid-area: sidebar;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+ }
+
+ .add-project-btn {
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+}
+
+.add-project-btn:hover {
+    background: var(--bg-secondary);
+}
+
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.project-list li {
+    background: transparent;  /* remove grey background */
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.project-list li:hover {
+    background: var(--bg-secondary);
+}
+
+.project-list li.active {
+    background: var(--bg-secondary);
+    font-weight: 600;
+}
+
+.header {
+    grid-area: header;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header select {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.header select:hover {
+    border-color: #aaaaaa;
+}
+
+.add-todo-btn {
+    margin-left: auto;  /* pushes button to the right */
+    padding: 8px 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.add-todo-btn:hover {
+    background: #c0392b;
+}
+
+.hamburger-btn {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.content { 
+    grid-area: content;
+    padding: 24px;
+    overflow-y: auto;
+ }
+
+ .todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 800px;  /* don't stretch too wide on large screens */
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-primary);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    position: relative;
+}
+
+.todo-item:hover {
+    border-color: #aaaaaa;
+}
+
+.color-tab {
+    width: 4px;
+    height: 100%;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.todo-title {
+    flex: 1;  /* takes up remaining space */
+    font-weight: 500;
+}
+
+.todo-due-date,
+.todo-due-time {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.edit-btn,
+.delete-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+    border-radius: var(--radius);
+    opacity: 0;  /* hidden by default */
+}
+
+/* only show buttons on hover */
+.todo-item:hover .edit-btn,
+.todo-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.todo-item.expanded {
+    flex-wrap: wrap;  /* allows expanded content to wrap below */
+}
+
+.expanded-content {
+    width: 100%;  /* takes full width below the collapsed row */
+    padding-top: 12px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.expanded-content > span:not(.priority-label) {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+}
+
+.expanded-content p {
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-size: 13px;
+}
+
+.expanded-content button {
+    align-self: flex-start;  /* don't stretch full width */
+    padding: 6px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.expanded-content button:hover {
+    border-color: #aaaaaa;
+}
+
+.todo-item.completed {
+    opacity: 0.7;  /* subtle instead of grey background */
+    background: var(--bg-secondary);
+}
+
+.todo-item.completed .todo-title {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.footer { grid-area: footer; }
+
+dialog {
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 0;
+    max-width: 500px;
+    width: 100%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+dialog::backdrop {
+    background: rgba(0,0,0,0.4);  /* dark overlay behind modal */
+}
+
+.dialog-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dialog-content h2 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.todo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.todo-form label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.todo-form input,
+.todo-form textarea,
+.todo-form select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-primary);
+}
+
+.todo-form input:focus,
+.todo-form textarea:focus,
+.todo-form select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.todo-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.todo-form div:last-child {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.cancel-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.cancel-btn:hover {
+    background: var(--bg-secondary);
+}
+
+.submit-btn {
+    padding: 8px 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.submit-btn:hover {
+    background: #c0392b;
+}
+
+.checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;  /* scroll if too many items */
+    overflow-y: auto;
+}
+
+.checklist-items li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: var(--radius);
+}
+
+.checklist-items li:hover {
+    background: var(--bg-secondary);
+}
+
+.checklist-items span {
+    flex: 1;
+    cursor: text;  /* signals it's editable */
+}
+
+.checklist-items input[type="text"] {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.add-checklist-item-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    border-radius: var(--radius);
+    width: 100%;
+}
+
+.add-checklist-item-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.close-checklist-btn {
+    align-self: flex-end;
+    padding: 8px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.title-error {
+    color: red;
+    display: none;
+}
+
+.title-error.visible {
+    display: block;
+}
+
+.priority-high .color-tab {background-color: var(--priority-high); }
+.priority-medium .color-tab {background-color: var(--priority-medium);}
+.priority-low .color-tab {background-color: var(--priority-low);}
+
+.priority-label {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+}
+
+.priority-high .priority-label {
+    background: rgba(219, 64, 53, 0.15);
+    color: var(--priority-high);
+}
+
+.priority-medium .priority-label {
+    background: rgba(255, 154, 20, 0.15);
+    color: var(--priority-medium);
+}
+
+.priority-low .priority-label {
+    background: rgba(64, 115, 255, 0.15);
+    color: var(--priority-low);
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #333333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    z-index: 1000;
+    animation: slideIn 0.2s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

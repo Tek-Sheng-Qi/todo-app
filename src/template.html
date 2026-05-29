@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <button class="add-project-btn">New Project</button>
+        <ul class="project-list">
+          <!--projects rendered here dynamically-->
+        </ul>
+      </div>
+      <div class="header">
+        <img class="logo" />
+        <button class="hamburger-btn">☰</button>
+        <select class="filter-sort">
+            <option value="ascending" selected>Ascending</option>
+            <option value="descending">Descending</option>
+        </select>
+        <select class="filter-priority">
+          <option value="all" selected>All Priorities</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select class="filter-status">
+          <option value="all" selected>All</option>
+          <option value="pending" selected>Pending</option>
+          <option value="completed">Completed</option>
+        </select>
+        <button class="add-todo-btn">+ Add Task</button>
+      </div>
+      <div class="content">
+        <ul class="todo-list">
+          <!---todos rendered here dynamically-->
+        </ul>
+      </div>
+      <div class="footer"></div>
+    </div>
+    <dialog id="createTodoDialog">
+      <div class="dialog-content">
+        <h2>New Task</h2>
+        <form class="todo-form">
+        <label for="title">Title*:</label>
+        <input autofocus type="text" id="title" name="title" required/>
+        <span class="title-error">Title is required</span>
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="4"
+          cols="4"
+        ></textarea>
+        <label for="priority">Priority:</label>
+        <select name="priority" id="priority">
+          <option value="low" selected>Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <div class="date-time">
+          <label for="dueDate">Due Date:</label>
+          <input type="date" id="dueDate" name="dueDate" />
+          <label for="dueTime">Due Time:</label>
+          <input type="time" id="dueTime" name="dueTime" />
+        </div>
+        <label for="notes">Notes:</label>
+        <textarea id="notes" name="notes" rows="4" cols="4"></textarea>
+        <div>
+          <button class="cancel-btn" formmethod="dialog">Cancel</button>
+          <button type="submit" class="submit-btn">Submit</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="checklistDialog">
+      <div class="dialog-content">
+        <h2>Checklist</h2>
+        <ul class="checklist-items">
+          <!--rendered dynamically-->
+        </ul>
+        <button class="add-checklist-item-btn">
+            <i data-lucide="plus"></i> Add Item
+        </button>
+        <button class="close-checklist-btn">Close</button>
+      </div>
+    </dialog>
+  </div>
+  </body>
+</html>
